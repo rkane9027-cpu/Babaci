@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>La Boutique de Baba · Montres de luxe & tendance</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="awesome" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Header */
+        header {
+            background: #0f172a;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f97316;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #f97316, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav ul li a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #f97316;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #f97316;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.8)), url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+
+        .hero-content h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px black;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: #f97316;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(249,115,22,0.4);
+        }
+
+        .btn:hover {
+            background: #ea580c;
+            transform: scale(1.05);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            width: 100px;
+            height: 4px;
+            background: #f97316;
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Grille produits */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            animation-delay: calc(0.1s * var(--i));
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        .product-image {
+            height: 280px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #f1f5f9;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-image:hover img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f97316;
+            margin: 0.8rem 0;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            padding: 0.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: 0.3s;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .btn-whatsapp:hover {
+            background: #20bd5a;
+            transform: scale(1.02);
+        }
+
+        /* Section Facebook */
+        .facebook-card {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .facebook-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f97316;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #475569;
+        }
+
+        .facebook-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn-facebook {
+            background: #1877f2;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .btn-facebook:hover {
+            background: #0d5ab9;
+            transform: translateY(-3px);
+        }
+
+        .btn-messenger {
+            background: #0084ff;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .btn-messenger:hover {
+            background: #0063c0;
+            transform: translateY(-3px);
+        }
+
+        /* Bouton WhatsApp flottant */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 99;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .whatsapp-float:hover {
+            background: #20bd5a;
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding: 3rem 5% 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h4 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .footer-col h4:after {
+            content: '';
+            width: 50px;
+            height: 2px;
+            background: #f97316;
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: #f97316;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            background: #1e293b;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #f97316;
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.9rem;
+        }
+
+        /* Modal zoom */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 30px white;
+        }
+
+        .modal .close {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            nav ul {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem 0;
+            }
+            nav ul.show {
+                display: flex;
+            }
+            .hero-content h2 {
+                font-size: 2.2rem;
+            }
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+        /* ===== SECTION MEUBLES ===== */
+.furniture {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.furniture h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2em;
+}
+
+/* Grille responsive */
+.furniture-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+/* Carte d'un meuble */
+.furniture-item {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Animation au survol (souris) */
+.furniture-item:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+}
+
+/* Image */
+.furniture-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.furniture-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.furniture-item:hover .furniture-image img {
+  transform: scale(1.1);
+}
+
+/* Infos */
+.furniture-info {
+  padding: 15px;
+  text-align: center;
+}
+
+.furniture-info h3 {
+  margin: 0 0 10px;
+  font-size: 1.2em;
+}
+
+.furniture-price {
+  font-weight: bold;
+  color: #e67e22;
+  margin-bottom: 15px;
+}
+
+/* Bouton WhatsApp (si tu n'as pas déjà cette classe, sinon elle sera mise à jour) */
+.btn-whatsapp {
+  display: inline-block;
+  background: #25D366;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.btn-whatsapp:hover {
+  background: #128C7E;
+}
+.furniture-item:hover,
+.furniture-item.touch-hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+}
+
+.furniture-item:hover .furniture-image img,
+.furniture-item.touch-hover .furniture-image img {
+  transform: scale(1.1);
+}
+.furniture-image {
+  width: 100%;
+  height: 200px;
+  overflow: visible; /* Changé de hidden à visible */
+  position: relative; /* Pour gérer le z-index */
+  z-index: 1;
+}
+
+.furniture-item:hover .furniture-image img,
+.furniture-item.touch-hover .furniture-image img {
+  transform: scale(1.3); /* Zoom modéré */
+  filter: brightness(1.1);
+  transition: transform 0.4s ease;
+}
+
+.furniture-item:hover,
+.furniture-item.touch-hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+  z-index: 10; /* Pour passer au-dessus des autres */
+  position: relative;
+}
+.furniture-item.touch-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+}
+/* ===== SECTION MEUBLES ===== */
+.furniture {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.furniture h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2em;
+}
+
+/* Grille responsive */
+.furniture-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+/* Carte d'un meuble */
+.furniture-item {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative; /* Nécessaire pour le z-index */
+}
+
+/* Conteneur de l'image : on autorise le débordement */
+.furniture-image {
+  width: 100%;
+  height: 200px;
+  overflow: visible;    /* ← CHANGE : l'image peut dépasser */
+  position: relative;
+  z-index: 1;
+}
+
+.furniture-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+/* Effet au survol (souris) et au toucher (classe .touch-hover) */
+.furniture-item:hover,
+.furniture-item.touch-hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+  z-index: 10;          /* Passe au-dessus des autres cartes */
+  position: relative;
+}
+
+.furniture-item:hover .furniture-image img,
+.furniture-item.touch-hover .furniture-image img {
+  transform: scale(1.3); /* Zoom plus fort, l'image dépasse */
+  filter: brightness(1.1);
+}
+
+/* Infos */
+.furniture-info {
+  padding: 15px;
+  text-align: center;
+  background: white;     /* Pour que le texte reste lisible */
+  position: relative;
+  z-index: 2;
+}
+
+.furniture-info h3 {
+  margin: 0 0 10px;
+  font-size: 1.2em;
+}
+
+.furniture-price {
+  font-weight: bold;
+  color: #e67e22;
+  margin-bottom: 15px;
+}
+
+/* Bouton WhatsApp */
+.btn-whatsapp {
+  display: inline-block;
+  background: #25D366;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.btn-whatsapp:hover {
+  background: #128C7E;
+}
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <!-- Remplacez par votre vrai logo (extrait de 1984.jpg) -->
+        <img src="images/ba.jpg" alt="Logo La Boutique de Baba" class="logo-img" onerror="this.src='https://via.placeholder.com/60x60/0f172a/f97316?text=B'">
+        <div class="logo-text">
+            <h1>La Boutique de Baba</h1>
+            <span>Spécialiste montres · Yopougon</span>
+        </div>
+    </div>
+    <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+    <nav>
+        <ul id="nav-menu">
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#montres">Montres</a></li>
+            <li><a href="#facebook">Facebook</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero" id="accueil">
+    <div class="hero-content">
+        <h2>L'élégance à votre poignet</h2>
+        <p>Découvrez notre collection de montres authentiques : Casio, Diesel, TAG Heuer et plus.</p>
+        <a href="#montres" class="btn">Voir les montres <i class="fas fa-arrow-down"></i></a>
+    </div>
+</section>
+
+<!-- Section Montres -->
+<section id="montres">
+    <h2 class="section-title">Nos montres en vente</h2>
+    <div class="products-grid">
+        <!-- Produit 1 : 1963.jpg (prix 10.000f) -->
+        <div class="product-card" style="--i:1;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/oo.jpg" alt="Montre classique 10.000f">
+            </div>
+            <div class="product-info">
+                <h3>Montre connecter robuste</h3>
+                <div class="product-price">10 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20classique%20dor%C3%A9e%20%C3%A0%2010%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+           
+        <!-- Produit 2 : 1964.jpg (prix 15.000f) -->
+        <div class="product-card" style="--i:2;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/mc.jpg" alt="Montre sport 15.000f">
+            </div>
+            <div class="product-info">
+                <h3>Montre connecter</h3>
+                <div class="product-price">10 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20connecter%20acier%20%C3%A0%2010%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <!-- Produit 3 : 1966.jpg (La Pal) -->
+        <div class="product-card" style="--i:3;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/nt.jpg" alt="Montre La Pal">
+            </div>
+            <div class="product-info">
+                <h3>Montre elegant</h3>
+                <div class="product-price">12 500 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20%20elegant%20%C3%A0%2012%20500%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <!-- Produit 4 : 1970.jpg (BLANC MONT) -->
+        <div class="product-card" style="--i:4;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/mb.jpg" alt="Montre Blanc">
+            </div>
+            <div class="product-info">
+                <h3>Montre noir elegant</h3>
+                <div class="product-price">22 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20noir %20%C3%A0%2022%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <!-- Produit 5 : 1971.jpg (IVC AUTOMATIC) -->
+        <div class="product-card" style="--i:5;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/yt.jpg" alt="Montre IVC Automatic">
+            </div>
+            <div class="product-info">
+                <h3>Montre noir</h3>
+                <div class="product-price">35 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20noir%20Automatic%20%C3%A0%2035%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <!-- Produit 6 : 1973.jpg (KEEPUPWITH GLOBALFASHION) -->
+        <div class="product-card" style="--i:6;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/ct.jpg" alt="Montre Fashion">
+            </div>
+            <div class="product-info">
+                <h3>cartier</h3>
+                <div class="product-price">9 500 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20cartier%20%C3%A0%209%20500%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <!-- Produit 7 : 1975.jpg (AUTO BLOWN MEI SUR 42MM) -->
+        <div class="product-card" style="--i:7;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/pg.jpg" alt="Montre Auto 42mm">
+            </div>
+            <div class="product-info">
+                <h3>Montre poedagar</h3>
+                <div class="product-price">18 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20poedagar%2042mm%20%C3%A0%2018%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <!-- Produit 8 : 1976.jpg (cadran avec chiffres) -->
+        <div class="product-card" style="--i:8;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/oi.jpg" alt="Montre chronographe">
+            </div>
+            <div class="product-info">
+                <h3>Montre chronographe</h3>
+                <div class="product-price">28 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20chronographe%20%C3%A0%2028%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+
+        </div>
+        <!-- Produit 9 : 1979.jpg (DIESEL) -->
+        <div class="product-card" style="--i:9;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/el.jpg" alt="Montre Diesel">
+            </div>
+            <div class="product-info">
+                <h3>cartier</h3>
+                <div class="product-price">45 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20Montre%20cartier%20%C3%A0%2045%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <!-- Produit 10 : 1980.jpg (TAG HEUER) -->
+        <div class="product-card" style="--i:10;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/sk.jpg" alt="Montre TAG Heuer">
+            </div>
+            <div class="product-info">
+                <h3>skmei 2346</h3>
+                <div class="product-price">10 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20skeim 2346%20%20%20%C3%A0%2010%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <div class="product-card" style="--i:10;">
+    <div class="product-image" onclick="openModal(this)">
+        <img src="images/gt.jpg" alt="Montre TAG Heuer">
+    </div>
+    <div class="product-info">
+        <h3>Montre connecté</h3>
+        <div class="product-price">10 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20montre connecté%20%20%20%C3%A0%2010%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+    </div>
+</div>
+
+        <!-- Produit 11 : 1983.jpg (CASIO G-SHOCK) -->
+        <div class="product-card" style="--i:11;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/ut.jpg" alt="Montre Casio G-Shock">
+            </div>
+            <div class="product-info">
+                <h3>dame authentique en cuir</h3>
+                <div class="product-price">15 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20dame%20authentiques%20%C3%A0%2015%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+        <div class="product-card" style="--i:11;">
+    <div class="product-image" onclick="openModal(this)">
+        <img src="images/gp.jpg" alt="Montre Casio G-Shock">
+    </div>
+    <div class="product-info">
+        <h3>gps</h3>
+        <div class="product-price">3 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20%20le%20%%gps%A0%203%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+    </div>
+</div>
+<div class="product-card" style="--i:11;">
+            <div class="product-image" onclick="openModal(this)">
+                <img src="images/ut.jpg" alt="Montre Casio G-Shock">
+            </div>
+            <div class="product-info">
+                <h3>dame authentique en cuir</h3>
+                <div class="product-price">15 000 FCFA</div>
+                <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20la%20dame%20authentiques%20%C3%A0%2015%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+            </div>
+        </div>
+         
+        <div class="product-card" style="--i:11;">
+    <div class="product-image" onclick="openModal(this)">
+        <img src="images/ds.jpg" alt="Montre Casio G-Shock">
+    </div>
+    <div class="product-info">
+        <h3>diesel</h3>
+        <div class="product-price"></div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20diesel%20" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+    </div>
+</div>
+ <div class="product-card" style="--i:11;">
+     <div class="product-image" onclick="openModal(this)">
+         <img src="images/df.jpg" alt="Montre Casio G-Shock">
+     </div>
+     <div class="product-info">
+         <h3>Diesel</h3>
+         <div class="product-price"></div>
+         <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20%20Diesel%." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+     </div>
+ </div>
+
+
+        <!-- Produit 12 : vous pouvez ajouter d'autres images si disponibles -->
+   <div class="product-card" style="--i:11;">
+       <div class="product-image" onclick="openModal(this)">
+           <img src="images/md.jpg" alt="Montre Casio G-Shock">
+       </div>
+       <div class="product-info">
+           <h3>monsieur-madame</h3>
+           <div class="product-price">30 000 FCFA</div>
+           <a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20commander%20%20monsieur-madame%20authentiques%20%C3%A0%2015%20000%20FCFA." class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+       </div>
+
+
+</section>
+<!-- SECTION MEUBLES -->
+<section class="furniture">
+  <h2>Nos Meubles</h2>
+  <div class="furniture-grid">
+
+    <!-- Meuble 1 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/tb.jpg" alt="Table en bois massif">
+      </div>
+      <div class="furniture-info">
+        <h3>Table à manger</h3>
+        <div class="furniture-price">100 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20Table%20à%20manger%20" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 2 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/nh.jpg" alt="Chaise design">
+      </div>
+      <div class="furniture-info">
+        <h3>table à manger </h3>
+        <div class="furniture-price">100 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20table %20à%20manger" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 3 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/ag.jpg" alt="Armoire chêne">
+      </div>
+      <div class="furniture-info">
+        <h3>Table centrale agenté</h3>
+        <div class="furniture-price">40 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20table %20central" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 4 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/mp.jpg" alt="Canapé moderne">
+      </div>
+      <div class="furniture-info">
+        <h3>Table à manger</h3>
+        <div class="furniture-price">100 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20table %20à manger" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 5 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/mt.jpg" alt="Buffet vintage">
+      </div>
+      <div class="furniture-info">
+        <h3>meuble Tv</h3>
+        <div class="furniture-price">39 900 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20meuble %20Tv" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 6 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/mu.jpg" alt="Lit double">
+      </div>
+      <div class="furniture-info">
+        <h3>Matelas Baba ci  </h3>
+        <div class="furniture-price">200 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20matelas%20baba ci" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 7 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/bl.jpg" alt="Table basse">
+      </div>
+      <div class="furniture-info">
+        <h3>canapé</h3>
+        <div class="furniture-price">300 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20canapé%20" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 8 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/ui.jpg" alt="Bibliothèque">
+      </div>
+      <div class="furniture-info">
+        <h3>lit compressé</h3>
+        <div class="furniture-price">270 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20lit compressé" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 9 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/cp.jpg" alt="Commode">
+      </div>
+      <div class="furniture-info">
+        <h3>canapé compressé</h3>
+        <div class="furniture-price">450 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20Canapé compressée" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 10 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/le.jpg" alt="Bureau">
+      </div>
+      <div class="furniture-info">
+        <h3>lit électronique</h3>
+        <div class="furniture-price">1
+        500 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20lit électronique" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 11 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/ma.jpg" alt="Étagère murale">
+      </div>
+      <div class="furniture-info">
+        <h3></h3>
+        <div class="furniture-price">200 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20%C3%89tag%C3%A8re%20murale" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 12 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/pl.jpg" alt="Table de nuit">
+      </div>
+      <div class="furniture-info">
+        <h3>placa</h3>
+        <div class="furniture-price">120 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20placa" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 13 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/et.jpg" alt="Miroir mural">
+      </div>
+      <div class="furniture-info">
+        <h3>étagère</h3>
+        <div class="furniture-price">40 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20étagère" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+    <!-- Meuble 14 -->
+    <div class="furniture-item">
+      <div class="furniture-image">
+        <img src="images/ca.jpg" alt="Fauteuil relax">
+      </div>
+      <div class="furniture-info">
+        <h3>fauteuil relax</h3>
+        <div class="furniture-price">300 000 FCFA</div>
+        <a href="https://wa.me/22509004803?text=Bonjour%20Baba%201%20Je%20souhaite%20commander%20Fauteuil%20relax" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Commander</a>
+      </div>
+    </div>
+
+
+
+  </div>
+</section>
+<!-- FIN SECTION MEUBLES -->
+
+<!-- Section Facebook -->
+<section id="facebook">
+    <h2 class="section-title">Notre page Facebook</h2>
+    <div class="facebook-card">
+        <div class="facebook-stats">
+            <div class="stat-item">
+                <div class="stat-number">30 K</div>
+                <div class="stat-label">followers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">40</div>
+                <div class="stat-label">suivi(e)s</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">848</div>
+                <div class="stat-label">publications</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #475569; margin-bottom: 1rem;">Page · Blog personnel · Ventes en ligne</p>
+        <div class="facebook-buttons">
+            <!-- Remplacez les # par l'URL de votre page Facebook -->
+            <a href="https://www.facebook.com/share/1Adt7AJWEG/" class="btn-facebook" target="_blank"><i class="fab fa-facebook-f"></i> Suivre</a>
+            <a href="#" class="btn-messenger" target="_blank"><i class="fab fa-facebook-messenger"></i> Message</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer id="contact">
+    <div class="footer-content">
+        <div class="footer-col">
+            <h4>La Boutique de Baba</h4>
+            <p><i class="fas fa-map-marker-alt"></i> Yopougon, Côte d'Ivoire</p>
+            <p><i class="fas fa-phone"></i> <a href="tel:+22509004803">09 00 48 03</a></p>
+            <p><i class="fas fa-envelope"></i> <a href="mailto:christdior1@gmail.com">christdior1@gmail.com</a></p>
+            <p><i class="fas fa-globe"></i> <a href="http://ckeshop.net" target="_blank">ckeshop.net</a> +1</p>
+        </div>
+        <div class="footer-col">
+            <h4>Liens rapides</h4>
+            <a href="#accueil">Accueil</a>
+            <a href="#montres">Montres</a>
+            <a href="#facebook">Facebook</a>
+            <a href="#" target="_blank">Communauté Baba ci (241 membres)</a>
+        </div>
+        <div class="footer-col">
+            <h4>Réseaux sociaux</h4>
+            <div class="social-links">
+                <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <p style="margin-top: 1rem;">Paiement et commandes via WhatsApp</p>
+        </div>
+    </div>
+    <div class="copyright">
+        &copy; 2025 La Boutique de Baba. Site réalisé avec ❤️ à Yopougon.
+    </div>
+</footer>
+
+<!-- Bouton WhatsApp flottant -->
+<a href="https://wa.me/22509004803?text=Bonjour%20Baba%20!%20Je%20souhaite%20des%20informations%20sur%20vos%20montres." class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Modal pour zoom -->
+<div id="imageModal" class="modal" onclick="closeModal(event)">
+    <span class="close" onclick="closeModal(event)">&times;</span>
+    <img id="modalImage" src="" alt="Zoom">
+</div>
+
+<script>
+    // Menu mobile
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+    });
+
+    // Zoom modal
+    function openModal(element) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const img = element.querySelector('img');
+        modal.style.display = 'flex';
+        modalImg.src = img.src;
+    }
+
+    function closeModal(event) {
+        const modal = document.getElementById('imageModal');
+        if (event.target === modal || event.target.classList.contains('close')) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Fermeture avec Echap
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+    });
+    // Effet tactile pour les meubles (mobile)
+const furnitureItems = document.querySelectorAll('.furniture-item');
+furnitureItems.forEach(item => {
+  item.addEventListener('touchstart', function() {
+    this.classList.add('touch-hover');
+  });
+  item.addEventListener('touchend', function() {
+    this.classList.remove('touch-hover');
+  });
+});
+// Effet tactile pour les meubles (mobile)
+const furnitureItems = document.querySelectorAll('.furniture-item');
+furnitureItems.forEach(item => {
+  item.addEventListener('touchstart', function() {
+    this.classList.add('touch-hover');
+  });
+  item.addEventListener('touchend', function() {
+    this.classList.remove('touch-hover');
+  });
+});
+// Effet tactile pour les meubles (mobile)
+const furnitureItems = document.querySelectorAll('.furniture-item');
+furnitureItems.forEach(item => {
+  item.addEventListener('touchstart', function() {
+    this.classList.add('touch-hover');
+  });
+  item.addEventListener('touchend', function() {
+    this.classList.remove('touch-hover');
+  });
+  item.addEventListener('touchcancel', function() {
+    this.classList.remove('touch-hover');
+  });
+});
+
+    // Animation au scroll pour les cartes (déjà animées en CSS, mais on peut réobserver)
+    // Optionnel
+</script>
+
+<!-- Note : placez toutes vos images (1963.jpg, 1964.jpg, ... 1984.jpg) dans un dossier "images" à côté de ce fichier. -->
+</body>
+</html>
