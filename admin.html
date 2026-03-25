@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - La Boutique de Baba</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 2rem;
+        }
+
+        /* Styles de la page de connexion */
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            color: #1e3a2f;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 40px;
+            font-size: 1rem;
+        }
+        .login-container button {
+            background: #2c7a4b;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        .error {
+            color: red;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Styles de l'interface admin (identiques à avant) */
+        .admin-header {
+            background: #1e3a2f;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-radius: 28px 28px 0 0;
+        }
+        .admin-header a {
+            color: #f3c26b;
+            text-decoration: none;
+            margin-left: 1.5rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #b68b40;
+            padding-left: 1rem;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+        .image-preview-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 2px solid #ddd;
+        }
+        button {
+            background: #2c7a4b;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #1e5a38;
+        }
+        .btn-danger {
+            background: #b91c1c;
+        }
+        .btn-secondary {
+            background: #4b5563;
+        }
+        .articles-table {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f8fafc;
+        }
+        .article-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .edit-btn, .delete-btn {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+        .edit-btn {
+            background: #2563eb;
+        }
+        .delete-btn {
+            background: #dc2626;
+        }
+        .change-pwd-btn {
+            background: #b68b40;
+            margin-left: 1rem;
+        }
+        @media (max-width: 700px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 0.8rem;
+                text-align: center;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="adminContent" style="display: none;">
+        <!-- Interface admin complète (masquée par défaut) -->
+        <div class="admin-header">
+            <div><strong>🔧 Administration - La Boutique de Baba</strong></div>
+            <div>
+                <a href="index.html">← Voir la boutique</a>
+                <button id="changePasswordBtn" class="change-pwd-btn">🔑 Changer le mot de passe</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <h2 id="formTitle">➕ Ajouter un article</h2>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label>📸 Photos (max 3)</label>
+                        <input type="file" id="imagesInput" accept="image/*" multiple>
+                        <div id="imagePreviews" class="image-preview-area"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>🏷️ Nom de l'article *</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>💰 Prix * (ex: 15 000 FCFA)</label>
+                        <input type="text" id="price" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📝 Description</label>
+                        <textarea id="description" rows="3"></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" id="saveBtn">💾 Enregistrer</button>
+                        <button type="button" id="cancelEditBtn" class="btn-secondary" style="display:none;">Annuler</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📋 Tous les articles</h2>
+                <div id="articlesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginContainer" class="login-container">
+        <h2>🔐 Accès administrateur</h2>
+        <input type="password" id="passwordInput" placeholder="Mot de passe" autofocus>
+        <button id="loginBtn">Se connecter</button>
+        <div id="loginError" class="error"></div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = "boutiqueArticles";
+        const PASSWORD_KEY = "adminPassword";
+        let editingId = null;
+        let currentImages = [];
+
+        // Gestion du mot de passe
+        function getStoredPassword() {
+            let pwd = localStorage.getItem(PASSWORD_KEY);
+            if (!pwd) {
+                pwd = "baba2025"; // mot de passe par défaut
+                localStorage.setItem(PASSWORD_KEY, pwd);
+            }
+            return pwd;
+        }
+
+        function checkPassword(inputPwd) {
+            return inputPwd === getStoredPassword();
+        }
+
+        function setNewPassword(newPwd) {
+            localStorage.setItem(PASSWORD_KEY, newPwd);
+        }
+
+        // Connexion
+        document.getElementById("loginBtn").addEventListener("click", () => {
+            const inputPwd = document.getElementById("passwordInput").value;
+            if (checkPassword(inputPwd)) {
+                sessionStorage.setItem("adminAuth", "true");
+                showAdminInterface();
+            } else {
+                document.getElementById("loginError").innerText = "Mot de passe incorrect.";
+            }
+        });
+
+        function showAdminInterface() {
+            document.getElementById("loginContainer").style.display = "none";
+            document.getElementById("adminContent").style.display = "block";
+            // Recharger les articles après connexion
+            renderAdminList();
+        }
+
+        // Vérifier si déjà authentifié dans cette session
+        if (sessionStorage.getItem("adminAuth") === "true") {
+            showAdminInterface();
+        }
+
+        // --- Fonctions de gestion des articles (inchangées) ---
+        function getArticles() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) return JSON.parse(stored);
+            const defaultArticles = [
+                { id: Date.now()+1, name: "Montre connectée robuste", price: "10 000 FCFA", description: "Montre étanche, GPS intégré.", images: ["https://via.placeholder.com/300x200?text=Montre1"] },
+                { id: Date.now()+2, name: "Table centrale agente", price: "40 000 FCFA", description: "Table design moderne.", images: ["https://via.placeholder.com/300x200?text=Table"] }
+            ];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultArticles));
+            return defaultArticles;
+        }
+
+        function saveArticles(articles) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
+            renderAdminList();
+            window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+        }
+
+        function handleImageUpload(files) {
+            const previewContainer = document.getElementById("imagePreviews");
+            previewContainer.innerHTML = "";
+            currentImages = [];
+            const maxFiles = Math.min(files.length, 3);
+            for (let i = 0; i < maxFiles; i++) {
+                const file = files[i];
+                if (file && file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        currentImages.push(e.target.result);
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.className = "image-preview";
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function renderAdminList() {
+            const articles = getArticles();
+            const container = document.getElementById("articlesList");
+            if (!container) return;
+            if (articles.length === 0) {
+                container.innerHTML = "<p>Aucun article.</p>";
+                return;
+            }
+            let html = `<div class="articles-table">\n<table>\n<thead>\n<tr><th>Image</th><th>Nom</th><th>Prix</th><th>Description</th><th>Actions</th></tr>\n</thead>\n<tbody>`;
+            articles.forEach(art => {
+                const firstImg = art.images && art.images[0] ? art.images[0] : "https://via.placeholder.com/60";
+                html += `<tr>
+                    <td><img class="article-img" src="${escapeHtml(firstImg)}" onerror="this.src='https://via.placeholder.com/60'"></td>
+                    <td><strong>${escapeHtml(art.name)}</strong></td>
+                    <td>${escapeHtml(art.price)}</td>
+                    <td>${escapeHtml(art.description.substring(0, 60))}${art.description.length > 60 ? '…' : ''}</td>
+                    <td class="action-buttons">
+                        <button class="edit-btn" data-id="${art.id}">✏️ Modifier</button>
+                        <button class="delete-btn" data-id="${art.id}">🗑️ Supprimer</button>
+                    </td>
+                </tr>`;
+            });
+            html += `</tbody>\n</table>\n</div>`;
+            container.innerHTML = html;
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => deleteArticle(parseInt(btn.dataset.id)));
+            });
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => startEdit(parseInt(btn.dataset.id)));
+            });
+        }
+
+        function deleteArticle(id) {
+            if (confirm("Supprimer définitivement cet article ?")) {
+                let articles = getArticles();
+                articles = articles.filter(art => art.id !== id);
+                saveArticles(articles);
+                if (editingId === id) resetForm();
+            }
+        }
+
+        function startEdit(id) {
+            const articles = getArticles();
+            const article = articles.find(art => art.id === id);
+            if (!article) return;
+            editingId = id;
+            document.getElementById("name").value = article.name;
+            document.getElementById("price").value = article.price;
+            document.getElementById("description").value = article.description;
+            currentImages = article.images ? [...article.images] : [];
+            const previewContainer = document.getElementById("imagePreviews");
+            previewContainer.innerHTML = "";
+            currentImages.forEach(imgSrc => {
+                const img = document.createElement("img");
+                img.src = imgSrc;
+                img.className = "image-preview";
+                previewContainer.appendChild(img);
+            });
+            document.getElementById("formTitle").innerText = "✏️ Modifier l'article";
+            document.getElementById("saveBtn").innerText = "🔄 Mettre à jour";
+            document.getElementById("cancelEditBtn").style.display = "inline-block";
+        }
+
+        function resetForm() {
+            editingId = null;
+            document.getElementById("productForm").reset();
+            document.getElementById("imagePreviews").innerHTML = "";
+            currentImages = [];
+            document.getElementById("formTitle").innerText = "➕ Ajouter un article";
+            document.getElementById("saveBtn").innerText = "💾 Enregistrer";
+            document.getElementById("cancelEditBtn").style.display = "none";
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value.trim();
+            const price = document.getElementById("price").value.trim();
+            const description = document.getElementById("description").value.trim();
+            if (!name || !price) {
+                alert("Nom et prix obligatoires.");
+                return;
+            }
+            let articles = getArticles();
+            if (editingId !== null) {
+                const index = articles.findIndex(art => art.id === editingId);
+                if (index !== -1) {
+                    articles[index] = {
+                        ...articles[index],
+                        name,
+                        price,
+                        description,
+                        images: currentImages.length ? currentImages : articles[index].images
+                    };
+                }
+                saveArticles(articles);
+                resetForm();
+            } else {
+                const newId = Date.now();
+                const newArticle = {
+                    id: newId,
+                    name,
+                    price,
+                    description,
+                    images: currentImages.length ? currentImages : ["https://via.placeholder.com/300x200?text=Image+non+disponible"]
+                };
+                articles.push(newArticle);
+                saveArticles(articles);
+                resetForm();
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Changer le mot de passe
+        function changePassword() {
+            const newPwd = prompt("Entrez le nouveau mot de passe :");
+            if (newPwd && newPwd.trim() !== "") {
+                setNewPassword(newPwd);
+                alert("Mot de passe modifié avec succès !");
+            } else {
+                alert("Mot de passe invalide.");
+            }
+        }
+
+        document.getElementById("changePasswordBtn")?.addEventListener("click", changePassword);
+        document.getElementById("productForm")?.addEventListener("submit", saveProduct);
+        document.getElementById("cancelEditBtn")?.addEventListener("click", resetForm);
+        document.getElementById("imagesInput")?.addEventListener("change", (e) => handleImageUpload(e.target.files));
+    </script>
+</body>
+</html>
