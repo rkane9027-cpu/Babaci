@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>La Boutique de Baba - Montres & Meubles</title>
     <style>
-        /* Gardez tous les styles précédents (identique à la version avec animations) */
         * {
             margin: 0;
             padding: 0;
@@ -37,6 +36,7 @@
             100% { transform: translateY(0px); }
         }
 
+        /* Barre de contact */
         .top-bar {
             background: #1e2a2b;
             color: #f3c26b;
@@ -55,6 +55,7 @@
             color: white;
         }
 
+        /* En-tête */
         .main-header {
             background: white;
             padding: 1rem 2rem;
@@ -68,6 +69,7 @@
             z-index: 100;
         }
 
+        /* LOGO */
         .logo {
             display: flex;
             align-items: center;
@@ -103,6 +105,7 @@
             color: #b68b40;
         }
 
+        /* Hero avec image de fond */
         .hero {
             background: linear-gradient(rgba(30, 58, 47, 0.7), rgba(30, 58, 47, 0.7)), 
                         url('https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1600');
@@ -112,8 +115,6 @@
             text-align: center;
             padding: 6rem 2rem;
             margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
         }
         .hero h2 {
             font-size: 2.5rem;
@@ -128,6 +129,7 @@
             animation: fadeUp 0.8s 0.2s backwards;
         }
 
+        /* Section arguments */
         .features {
             max-width: 1300px;
             margin: 3rem auto;
@@ -169,6 +171,7 @@
             font-size: 0.9rem;
         }
 
+        /* Conteneur principal */
         .container {
             max-width: 1300px;
             margin: 0 auto;
@@ -206,6 +209,8 @@
             background: #b68b40;
             color: white;
         }
+
+        /* Grille produits */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -241,6 +246,8 @@
         }
         .product-info {
             padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
         }
         .product-name {
             font-size: 1.3rem;
@@ -259,16 +266,38 @@
             color: #4a5568;
             font-size: 0.9rem;
             line-height: 1.5;
-        }
-        .empty-message {
-            text-align: center;
-            padding: 3rem;
-            background: white;
-            border-radius: 24px;
-            grid-column: 1 / -1;
+            margin-bottom: 1rem;
+            flex: 1;
         }
 
-        /* Modal (inchangé) */
+        /* Bouton Commander attrayant */
+        .order-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            letter-spacing: 0.5px;
+        }
+        .order-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+            background: linear-gradient(135deg, #20b95a 0%, #0f6e62 100%);
+        }
+        .order-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -316,7 +345,7 @@
             font-size: 1rem;
             color: #4a5568;
             line-height: 1.6;
-            margin-top: 1rem;
+            margin: 1rem 0;
         }
         .close-modal {
             position: absolute;
@@ -357,6 +386,10 @@
         }
         .modal-thumb:hover, .modal-thumb.active {
             border-color: #b68b40;
+        }
+        .modal-order-btn {
+            margin-top: 1rem;
+            width: 100%;
         }
 
         /* Footer */
@@ -411,6 +444,7 @@
             font-size: 0.8rem;
         }
 
+        /* Bouton WhatsApp flottant */
         .whatsapp-float {
             position: fixed;
             bottom: 30px;
@@ -434,6 +468,13 @@
             background-color: #128c7e;
             transform: scale(1.05);
             animation: none;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 24px;
+            grid-column: 1 / -1;
         }
 
         @media (max-width: 700px) {
@@ -476,7 +517,7 @@
     </div>
     <header class="main-header">
         <div class="logo">
-            <img src="images/mi.jpg" alt="La Boutique de Baba">
+            <img src="ba.jpg" alt="La Boutique de Baba">
             <div class="logo-text">
                 <h1>La Boutique de Baba</h1>
                 <p>Spécialiste montres & meubles - Yopougon</p>
@@ -524,9 +565,7 @@
             <button class="filter-btn" data-category="montre">⌚ Montres</button>
             <button class="filter-btn" data-category="meuble">🪑 Meubles</button>
         </div>
-        <div id="productsContainer" class="products-grid">
-            <!-- Les articles seront injectés ici -->
-        </div>
+        <div id="productsContainer" class="products-grid"></div>
     </main>
 
     <footer id="contact">
@@ -549,7 +588,7 @@
             <div class="footer-col">
                 <h3>Rejoignez-nous</h3>
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/people/La-Boutique-de-Baba/61561752817439/" target="_blank">📘 Facebook</a>
+                    <a href="https://www.facebook.com/share/18UF13i1w1/" target="_blank">📘 Facebook</a>
                     <a href="https://wa.me/22509004803" target="_blank">💬 WhatsApp</a>
                 </div>
                 <p style="margin-top: 1rem;">📱 Suivez notre communauté <strong>Baba ci</strong> (244 membres)</p>
@@ -565,10 +604,11 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/22509004803?text=Bonjour%2C%20je%20suis%20intéressé(e)%20par%20vos%20produits" class="whatsapp-float" target="_blank">
+    <a href="https://wa.me/22509004803?text=Bonjour%2C%20je%20souhaite%20commander%20un%20produit" class="whatsapp-float" target="_blank">
         💬 Nous contacter sur WhatsApp
     </a>
 
+    <!-- Modal pour les détails -->
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -578,13 +618,15 @@
                 <div id="modalPrice" class="modal-price"></div>
                 <div id="modalDesc" class="modal-desc"></div>
                 <div id="modalThumbnails" class="modal-thumbnails"></div>
+                <a id="modalOrderBtn" href="#" target="_blank" class="order-btn modal-order-btn">💬 Commander via WhatsApp</a>
             </div>
         </div>
     </div>
 
     <script>
         const STORAGE_KEY = "boutiqueArticles";
-        let currentFilter = "all"; // all, montre, meuble
+        let currentFilter = "all";
+        const whatsappNumber = "22509004803"; // Numéro international sans +
 
         function getArticles() {
             const stored = localStorage.getItem(STORAGE_KEY);
@@ -604,6 +646,12 @@
             return articles.filter(article => article.category === currentFilter);
         }
 
+        // Générer le lien WhatsApp pour un article
+        function getWhatsAppLink(article) {
+            const message = `Bonjour, je souhaite commander :\n\n*${article.name}*\nPrix : ${article.price}\n\nDescription : ${article.description}\n\nMerci de me confirmer la disponibilité et les modalités de livraison.`;
+            return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        }
+
         let currentArticle = null;
 
         function openModal(article) {
@@ -614,10 +662,12 @@
             const modalPrice = document.getElementById("modalPrice");
             const modalDesc = document.getElementById("modalDesc");
             const thumbContainer = document.getElementById("modalThumbnails");
+            const modalOrderBtn = document.getElementById("modalOrderBtn");
 
             modalName.innerText = article.name;
             modalPrice.innerText = article.price;
             modalDesc.innerText = article.description;
+            modalOrderBtn.href = getWhatsAppLink(article);
 
             const images = article.images && article.images.length ? article.images : ["https://via.placeholder.com/600x400?text=Image+non+disponible"];
             modalImage.src = images[0];
@@ -659,6 +709,7 @@
             let html = "";
             articles.forEach(article => {
                 const firstImage = article.images && article.images.length > 0 ? article.images[0] : "https://via.placeholder.com/400x300?text=Image+non+disponible";
+                const whatsappLink = getWhatsAppLink(article);
                 html += `
                     <div class="product-card" data-id="${article.id}">
                         <img class="product-img" src="${escapeHtml(firstImage)}" alt="${escapeHtml(article.name)}" onerror="this.src='https://via.placeholder.com/400x300?text=Image+manquante'">
@@ -666,21 +717,24 @@
                             <div class="product-name">${escapeHtml(article.name)}</div>
                             <div class="product-price">${escapeHtml(article.price)}</div>
                             <div class="product-desc">${escapeHtml(article.description)}</div>
+                            <a href="${whatsappLink}" target="_blank" class="order-btn" onclick="event.stopPropagation();">💬 Commander via WhatsApp</a>
                         </div>
                     </div>
                 `;
             });
             container.innerHTML = html;
 
+            // Attacher les événements de clic pour le modal
             document.querySelectorAll('.product-card').forEach(card => {
-                card.addEventListener('click', () => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.order-btn')) return;
                     const id = parseInt(card.getAttribute('data-id'));
                     const article = getArticles().find(a => a.id === id);
                     if (article) openModal(article);
                 });
             });
 
-            // Animation au scroll : observer les cartes
+            // Animation au scroll
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -702,10 +756,9 @@
             });
         }
 
-        // Gestion des filtres
+        // Filtres
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                // Mise à jour de l'état actif
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentFilter = btn.getAttribute('data-category');
@@ -713,6 +766,7 @@
             });
         });
 
+        // Fermeture modal
         document.querySelector(".close-modal")?.addEventListener("click", closeModal);
         document.getElementById("productModal")?.addEventListener("click", (e) => {
             if (e.target === document.getElementById("productModal")) closeModal();
@@ -720,7 +774,7 @@
 
         renderProducts();
 
-        // Animation des features au scroll
+        // Animation des features
         const featureObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -731,7 +785,7 @@
         }, { threshold: 0.3 });
         document.querySelectorAll('.feature').forEach(f => featureObserver.observe(f));
 
-        // Mise à jour en cas de changement dans localStorage (admin)
+        // Mise à jour si localStorage change
         window.addEventListener('storage', (event) => {
             if (event.key === STORAGE_KEY) renderProducts();
         });
