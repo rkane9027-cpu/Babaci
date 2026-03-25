@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>La Boutique de Baba - Montres & Meubles</title>
     <style>
+        /* Gardez tous les styles précédents (identique à la version avec animations) */
         * {
             margin: 0;
             padding: 0;
@@ -19,16 +20,9 @@
             overflow-x: hidden;
         }
 
-        /* Animations de base */
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulse {
@@ -43,7 +37,6 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Barre de contact */
         .top-bar {
             background: #1e2a2b;
             color: #f3c26b;
@@ -62,7 +55,6 @@
             color: white;
         }
 
-        /* En-tête */
         .main-header {
             background: white;
             padding: 1rem 2rem;
@@ -76,7 +68,6 @@
             z-index: 100;
         }
 
-        /* LOGO */
         .logo {
             display: flex;
             align-items: center;
@@ -112,10 +103,9 @@
             color: #b68b40;
         }
 
-        /* Hero avec image combinée montres & meubles */
         .hero {
             background: linear-gradient(rgba(30, 58, 47, 0.7), rgba(30, 58, 47, 0.7)), 
-                        url('https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=1600');
+                        url('https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1600');
             background-size: cover;
             background-position: center;
             color: white;
@@ -138,7 +128,6 @@
             animation: fadeUp 0.8s 0.2s backwards;
         }
 
-        /* Section arguments (Pourquoi nous choisir) */
         .features {
             max-width: 1300px;
             margin: 3rem auto;
@@ -180,7 +169,6 @@
             font-size: 0.9rem;
         }
 
-        /* Grille produits */
         .container {
             max-width: 1300px;
             margin: 0 auto;
@@ -188,10 +176,35 @@
         }
         .section-title {
             font-size: 2rem;
-            margin: 2rem 0 1.5rem;
+            margin: 2rem 0 1rem;
             border-left: 5px solid #b68b40;
             padding-left: 1rem;
             color: #1e3a2f;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: white;
+            border: 2px solid #b68b40;
+            color: #b68b40;
+            padding: 0.5rem 1.8rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        .filter-btn.active {
+            background: #b68b40;
+            color: white;
+        }
+        .filter-btn:hover:not(.active) {
+            background: #b68b40;
+            color: white;
         }
         .products-grid {
             display: grid;
@@ -247,8 +260,15 @@
             font-size: 0.9rem;
             line-height: 1.5;
         }
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 24px;
+            grid-column: 1 / -1;
+        }
 
-        /* Modal (inchangé mais amélioré) */
+        /* Modal (inchangé) */
         .modal {
             display: none;
             position: fixed;
@@ -390,14 +410,7 @@
             border-top: 1px solid #2c3e2f;
             font-size: 0.8rem;
         }
-        .empty-message {
-            text-align: center;
-            padding: 3rem;
-            background: white;
-            border-radius: 24px;
-        }
 
-        /* Bouton WhatsApp flottant avec animation */
         .whatsapp-float {
             position: fixed;
             bottom: 30px;
@@ -441,6 +454,9 @@
             .container {
                 padding: 0 1rem;
             }
+            .filter-buttons {
+                justify-content: center;
+            }
             .whatsapp-float {
                 bottom: 20px;
                 right: 20px;
@@ -460,7 +476,7 @@
     </div>
     <header class="main-header">
         <div class="logo">
-            <img src="ba.jpg" alt="La Boutique de Baba">
+            <img src="images/mi.jpg" alt="La Boutique de Baba">
             <div class="logo-text">
                 <h1>La Boutique de Baba</h1>
                 <p>Spécialiste montres & meubles - Yopougon</p>
@@ -478,7 +494,6 @@
         <p>Montres authentiques (Casio, Diesel, TAG Heuer) et meubles design. Paiement sécurisé via WhatsApp.</p>
     </section>
 
-    <!-- Section arguments -->
     <div class="features">
         <div class="feature">
             <div class="feature-icon">⌚</div>
@@ -504,6 +519,11 @@
 
     <main class="container">
         <h2 class="section-title">✨ Nos articles en vedette</h2>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-category="all">Tous</button>
+            <button class="filter-btn" data-category="montre">⌚ Montres</button>
+            <button class="filter-btn" data-category="meuble">🪑 Meubles</button>
+        </div>
         <div id="productsContainer" class="products-grid">
             <!-- Les articles seront injectés ici -->
         </div>
@@ -529,7 +549,7 @@
             <div class="footer-col">
                 <h3>Rejoignez-nous</h3>
                 <div class="social-icons">
-                   <a href="https://www.facebook.com/share/1DhZ488GNJ/" target="_blank">📘 Facebook</a>
+                    <a href="https://www.facebook.com/people/La-Boutique-de-Baba/61561752817439/" target="_blank">📘 Facebook</a>
                     <a href="https://wa.me/22509004803" target="_blank">💬 WhatsApp</a>
                 </div>
                 <p style="margin-top: 1rem;">📱 Suivez notre communauté <strong>Baba ci</strong> (244 membres)</p>
@@ -549,7 +569,6 @@
         💬 Nous contacter sur WhatsApp
     </a>
 
-    <!-- Modal pour les détails -->
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -565,35 +584,24 @@
 
     <script>
         const STORAGE_KEY = "boutiqueArticles";
+        let currentFilter = "all"; // all, montre, meuble
 
         function getArticles() {
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) return JSON.parse(stored);
             const defaultArticles = [
-                {
-                    id: Date.now() + 1,
-                    name: "Montre connectée robuste",
-                    price: "10 000 FCFA",
-                    description: "Montre étanche, GPS intégré, batterie longue durée.",
-                    images: ["https://via.placeholder.com/400x300?text=Montre+Connectee"]
-                },
-                {
-                    id: Date.now() + 2,
-                    name: "Table centrale agente",
-                    price: "40 000 FCFA",
-                    description: "Table design moderne, finition bois massif.",
-                    images: ["https://via.placeholder.com/400x300?text=Table+Centrale"]
-                },
-                {
-                    id: Date.now() + 3,
-                    name: "Meuble TV",
-                    price: "39 900 FCFA",
-                    description: "Meuble TV élégant, 3 tiroirs, couleur chêne.",
-                    images: ["https://via.placeholder.com/400x300?text=Meuble+TV"]
-                }
+                { id: Date.now() + 1, name: "Montre connectée robuste", price: "10 000 FCFA", category: "montre", description: "Montre étanche, GPS intégré, batterie longue durée.", images: ["https://via.placeholder.com/400x300?text=Montre+Connectee"] },
+                { id: Date.now() + 2, name: "Table centrale agente", price: "40 000 FCFA", category: "meuble", description: "Table design moderne, finition bois massif.", images: ["https://via.placeholder.com/400x300?text=Table+Centrale"] },
+                { id: Date.now() + 3, name: "Meuble TV", price: "39 900 FCFA", category: "meuble", description: "Meuble TV élégant, 3 tiroirs, couleur chêne.", images: ["https://via.placeholder.com/400x300?text=Meuble+TV"] }
             ];
             localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultArticles));
             return defaultArticles;
+        }
+
+        function getFilteredArticles() {
+            const articles = getArticles();
+            if (currentFilter === "all") return articles;
+            return articles.filter(article => article.category === currentFilter);
         }
 
         let currentArticle = null;
@@ -639,12 +647,12 @@
         }
 
         function renderProducts() {
-            const articles = getArticles();
+            const articles = getFilteredArticles();
             const container = document.getElementById("productsContainer");
             if (!container) return;
 
             if (articles.length === 0) {
-                container.innerHTML = `<div class="empty-message">🎯 Aucun article pour le moment. Revenez bientôt !</div>`;
+                container.innerHTML = `<div class="empty-message">🎯 Aucun article dans cette catégorie. Revenez bientôt !</div>`;
                 return;
             }
 
@@ -667,7 +675,7 @@
             document.querySelectorAll('.product-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const id = parseInt(card.getAttribute('data-id'));
-                    const article = articles.find(a => a.id === id);
+                    const article = getArticles().find(a => a.id === id);
                     if (article) openModal(article);
                 });
             });
@@ -681,7 +689,6 @@
                     }
                 });
             }, { threshold: 0.2 });
-
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
         }
 
@@ -694,6 +701,17 @@
                 return m;
             });
         }
+
+        // Gestion des filtres
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Mise à jour de l'état actif
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-category');
+                renderProducts();
+            });
+        });
 
         document.querySelector(".close-modal")?.addEventListener("click", closeModal);
         document.getElementById("productModal")?.addEventListener("click", (e) => {
@@ -719,4 +737,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
