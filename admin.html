@@ -4,42 +4,195 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - La Boutique de Baba</title>
+    
+    <!-- Google Analytics (ID G-DEDEDG941M) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDEDG941M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DEDEDG941M');
+    </script>
+
     <style>
-        /* Tous les styles précédents (identiques) */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', system-ui, sans-serif; }
-        body { background: #f0f2f5; padding: 2rem; }
-        .login-container { max-width: 400px; margin: 5rem auto; background: white; padding: 2rem; border-radius: 28px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; }
-        .login-container h2 { margin-bottom: 1.5rem; color: #1e3a2f; }
-        .login-container input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 40px; font-size: 1rem; }
-        .login-container button { background: #2c7a4b; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 40px; font-weight: bold; cursor: pointer; width: 100%; }
-        .error { color: red; margin-top: 0.5rem; font-size: 0.9rem; }
-        .admin-header { background: #1e3a2f; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border-radius: 28px 28px 0 0; }
-        .admin-header a { color: #f3c26b; text-decoration: none; margin-left: 1.5rem; }
-        .container { max-width: 1300px; margin: 0 auto; padding: 0 1.5rem; }
-        .card { background: white; border-radius: 28px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
-        h2 { font-size: 1.6rem; margin-bottom: 1.5rem; border-left: 5px solid #b68b40; padding-left: 1rem; }
-        .form-group { margin-bottom: 1.2rem; }
-        label { font-weight: 600; display: block; margin-bottom: 0.4rem; }
-        input, textarea, select { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 20px; font-size: 1rem; }
-        .image-preview-area { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
-        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 16px; border: 2px solid #ddd; }
-        button { background: #2c7a4b; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 40px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #1e5a38; }
-        .btn-danger { background: #b91c1c; }
-        .btn-secondary { background: #4b5563; }
-        .change-pwd-btn { background: #b68b40; margin-left: 1rem; }
-        .articles-table { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; }
-        th { background: #f8fafc; }
-        .article-img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; }
-        .action-buttons { display: flex; gap: 8px; }
-        .edit-btn, .delete-btn { padding: 4px 12px; font-size: 0.8rem; }
-        .edit-btn { background: #2563eb; }
-        .delete-btn { background: #dc2626; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 2rem;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            color: #1e3a2f;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 40px;
+            font-size: 1rem;
+        }
+        .login-container button {
+            background: #2c7a4b;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        .error {
+            color: red;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .admin-header {
+            background: #1e3a2f;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-radius: 28px 28px 0 0;
+        }
+        .admin-header a {
+            color: #f3c26b;
+            text-decoration: none;
+            margin-left: 1.5rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #b68b40;
+            padding-left: 1rem;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+        .image-preview-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 2px solid #ddd;
+        }
+        button {
+            background: #2c7a4b;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #1e5a38;
+        }
+        .btn-danger {
+            background: #b91c1c;
+        }
+        .btn-secondary {
+            background: #4b5563;
+        }
+        .change-pwd-btn {
+            background: #b68b40;
+            margin-left: 1rem;
+        }
+        .articles-table {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f8fafc;
+        }
+        .article-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .edit-btn, .delete-btn {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+        .edit-btn {
+            background: #2563eb;
+        }
+        .delete-btn {
+            background: #dc2626;
+        }
+
         @media (max-width: 700px) {
-            .admin-header { flex-direction: column; gap: 0.8rem; text-align: center; }
-            .action-buttons { flex-direction: column; }
+            .admin-header {
+                flex-direction: column;
+                gap: 0.8rem;
+                text-align: center;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -106,7 +259,6 @@
         let editingId = null;
         let currentImages = [];
 
-        // Gestion mot de passe
         function getStoredPassword() {
             let pwd = localStorage.getItem(PASSWORD_KEY);
             if (!pwd) { pwd = "baba2025"; localStorage.setItem(PASSWORD_KEY, pwd); }
@@ -131,7 +283,6 @@
         }
         if (sessionStorage.getItem("adminAuth") === "true") showAdminInterface();
 
-        // Gestion des articles
         function getArticles() {
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) return JSON.parse(stored);
@@ -305,4 +456,4 @@
         document.getElementById("imagesInput")?.addEventListener("change", (e) => handleImageUpload(e.target.files));
     </script>
 </body>
-                            </html>
+                    </html>
