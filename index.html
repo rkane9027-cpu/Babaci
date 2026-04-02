@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>La Boutique de Baba - Montres & Meubles</title>
+    
+    <!-- Google Analytics (ID G-DEDEDG941M) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDEDG941M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DEDEDG941M');
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -36,7 +46,6 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Barre de contact */
         .top-bar {
             background: #1e2a2b;
             color: #f3c26b;
@@ -55,7 +64,6 @@
             color: white;
         }
 
-        /* En-tête */
         .main-header {
             background: white;
             padding: 1rem 2rem;
@@ -69,7 +77,6 @@
             z-index: 100;
         }
 
-        /* LOGO */
         .logo {
             display: flex;
             align-items: center;
@@ -105,7 +112,6 @@
             color: #b68b40;
         }
 
-        /* Hero avec image de fond */
         .hero {
             background: linear-gradient(rgba(30, 58, 47, 0.7), rgba(30, 58, 47, 0.7)), 
                         url('https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1600');
@@ -129,7 +135,6 @@
             animation: fadeUp 0.8s 0.2s backwards;
         }
 
-        /* Section arguments */
         .features {
             max-width: 1300px;
             margin: 3rem auto;
@@ -171,7 +176,6 @@
             font-size: 0.9rem;
         }
 
-        /* Conteneur principal */
         .container {
             max-width: 1300px;
             margin: 0 auto;
@@ -210,7 +214,6 @@
             color: white;
         }
 
-        /* Grille produits */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -270,7 +273,6 @@
             flex: 1;
         }
 
-        /* Bouton Commander attrayant */
         .order-btn {
             display: inline-block;
             background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
@@ -293,11 +295,7 @@
             box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
             background: linear-gradient(135deg, #20b95a 0%, #0f6e62 100%);
         }
-        .order-btn:active {
-            transform: translateY(0);
-        }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -392,7 +390,6 @@
             width: 100%;
         }
 
-        /* Footer */
         footer {
             background: #1e2a2b;
             color: #ddd;
@@ -444,7 +441,6 @@
             font-size: 0.8rem;
         }
 
-        /* Bouton WhatsApp flottant */
         .whatsapp-float {
             position: fixed;
             bottom: 30px;
@@ -588,7 +584,7 @@
             <div class="footer-col">
                 <h3>Rejoignez-nous</h3>
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/share/18UF13i1w1/" target="_blank">📘 Facebook</a>
+                    <a href="https://www.facebook.com/people/La-Boutique-de-Baba/61561752817439/" target="_blank">📘 Facebook</a>
                     <a href="https://wa.me/22509004803" target="_blank">💬 WhatsApp</a>
                 </div>
                 <p style="margin-top: 1rem;">📱 Suivez notre communauté <strong>Baba ci</strong> (244 membres)</p>
@@ -608,7 +604,6 @@
         💬 Nous contacter sur WhatsApp
     </a>
 
-    <!-- Modal pour les détails -->
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -626,7 +621,7 @@
     <script>
         const STORAGE_KEY = "boutiqueArticles";
         let currentFilter = "all";
-        const whatsappNumber = "22509004803"; // Numéro international sans +
+        const whatsappNumber = "22509004803";
 
         function getArticles() {
             const stored = localStorage.getItem(STORAGE_KEY);
@@ -646,7 +641,6 @@
             return articles.filter(article => article.category === currentFilter);
         }
 
-        // Générer le lien WhatsApp pour un article
         function getWhatsAppLink(article) {
             const message = `Bonjour, je souhaite commander :\n\n*${article.name}*\nPrix : ${article.price}\n\nDescription : ${article.description}\n\nMerci de me confirmer la disponibilité et les modalités de livraison.`;
             return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -724,7 +718,6 @@
             });
             container.innerHTML = html;
 
-            // Attacher les événements de clic pour le modal
             document.querySelectorAll('.product-card').forEach(card => {
                 card.addEventListener('click', (e) => {
                     if (e.target.closest('.order-btn')) return;
@@ -734,7 +727,6 @@
                 });
             });
 
-            // Animation au scroll
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -756,7 +748,6 @@
             });
         }
 
-        // Filtres
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -766,7 +757,6 @@
             });
         });
 
-        // Fermeture modal
         document.querySelector(".close-modal")?.addEventListener("click", closeModal);
         document.getElementById("productModal")?.addEventListener("click", (e) => {
             if (e.target === document.getElementById("productModal")) closeModal();
@@ -774,7 +764,6 @@
 
         renderProducts();
 
-        // Animation des features
         const featureObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -785,7 +774,6 @@
         }, { threshold: 0.3 });
         document.querySelectorAll('.feature').forEach(f => featureObserver.observe(f));
 
-        // Mise à jour si localStorage change
         window.addEventListener('storage', (event) => {
             if (event.key === STORAGE_KEY) renderProducts();
         });
