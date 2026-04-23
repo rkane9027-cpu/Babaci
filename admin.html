@@ -4,206 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - La Boutique de Baba</title>
-    
-    <!-- Google Analytics (ID G-DEDEDG941M) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDEDG941M"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-DEDEDG941M');
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Votre configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMNWXKxKc3fKZcUDvisHNhDFfKcVkr9WU",
+            authDomain: "boutique-baba.firebaseapp.com",
+            projectId: "boutique-baba",
+            storageBucket: "boutique-baba.firebasestorage.app",
+            messagingSenderId: "604967579171",
+            appId: "1:604967579171:web:67910d20c5c26837028b96",
+            measurementId: "G-0V72CQ43JN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const articlesCollection = collection(db, "articles");
+
+        window.db = db;
+        window.articlesCollection = articlesCollection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
+        window.doc = doc;
     </script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', system-ui, sans-serif;
-        }
-
-        body {
-            background: #f0f2f5;
-            padding: 2rem;
-        }
-
-        .login-container {
-            max-width: 400px;
-            margin: 5rem auto;
-            background: white;
-            padding: 2rem;
-            border-radius: 28px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .login-container h2 {
-            margin-bottom: 1.5rem;
-            color: #1e3a2f;
-        }
-        .login-container input {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 40px;
-            font-size: 1rem;
-        }
-        .login-container button {
-            background: #2c7a4b;
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-        }
-        .error {
-            color: red;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .admin-header {
-            background: #1e3a2f;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            border-radius: 28px 28px 0 0;
-        }
-        .admin-header a {
-            color: #f3c26b;
-            text-decoration: none;
-            margin-left: 1.5rem;
-        }
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        .card {
-            background: white;
-            border-radius: 28px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-        }
-        h2 {
-            font-size: 1.6rem;
-            margin-bottom: 1.5rem;
-            border-left: 5px solid #b68b40;
-            padding-left: 1rem;
-        }
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-        label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 0.4rem;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            font-size: 1rem;
-        }
-        .image-preview-area {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .image-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 16px;
-            border: 2px solid #ddd;
-        }
-        button {
-            background: #2c7a4b;
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover {
-            background: #1e5a38;
-        }
-        .btn-danger {
-            background: #b91c1c;
-        }
-        .btn-secondary {
-            background: #4b5563;
-        }
-        .change-pwd-btn {
-            background: #b68b40;
-            margin-left: 1rem;
-        }
-        .articles-table {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            text-align: left;
-            padding: 12px 8px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background: #f8fafc;
-        }
-        .article-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        .edit-btn, .delete-btn {
-            padding: 4px 12px;
-            font-size: 0.8rem;
-        }
-        .edit-btn {
-            background: #2563eb;
-        }
-        .delete-btn {
-            background: #dc2626;
-        }
-
-        @media (max-width: 700px) {
-            .admin-header {
-                flex-direction: column;
-                gap: 0.8rem;
-                text-align: center;
-            }
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', system-ui; }
+        body { background: #f0f2f5; padding: 2rem; }
+        .login-container { max-width: 400px; margin: 5rem auto; background: white; padding: 2rem; border-radius: 28px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .login-container input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 40px; }
+        .login-container button { background: #2c7a4b; color: white; border: none; padding: 0.7rem; border-radius: 40px; font-weight: bold; cursor: pointer; width: 100%; }
+        .error { color: red; margin-top: 0.5rem; }
+        .admin-header { background: #1e3a2f; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border-radius: 28px 28px 0 0; }
+        .admin-header a { color: #f3c26b; text-decoration: none; margin-left: 1.5rem; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 1.5rem; }
+        .card { background: white; border-radius: 28px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
+        h2 { font-size: 1.6rem; margin-bottom: 1.5rem; border-left: 5px solid #b68b40; padding-left: 1rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        label { font-weight: 600; display: block; margin-bottom: 0.4rem; }
+        input, textarea, select { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 20px; }
+        .image-preview-area { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 16px; border: 2px solid #ddd; }
+        button { background: #2c7a4b; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 40px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #1e5a38; }
+        .btn-danger { background: #b91c1c; }
+        .btn-secondary { background: #4b5563; }
+        .change-pwd-btn { background: #b68b40; margin-left: 1rem; }
+        .articles-table { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; }
+        .article-img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; }
+        .action-buttons { display: flex; gap: 8px; }
+        .edit-btn, .delete-btn { padding: 4px 12px; font-size: 0.8rem; }
+        .edit-btn { background: #2563eb; }
+        .delete-btn { background: #dc2626; }
+        @media (max-width:700px) { .admin-header { flex-direction: column; gap:0.8rem; } }
     </style>
 </head>
 <body>
     <div id="adminContent" style="display: none;">
         <div class="admin-header">
             <div><strong>🔧 Administration - La Boutique de Baba</strong></div>
-            <div>
-                <a href="index.html">← Voir la boutique</a>
-                <button id="changePasswordBtn" class="change-pwd-btn">🔑 Changer le mot de passe</button>
-            </div>
+            <div><a href="index.html">← Voir la boutique</a></div>
         </div>
         <div class="container">
             <div class="card">
@@ -215,15 +84,15 @@
                         <div id="imagePreviews" class="image-preview-area"></div>
                     </div>
                     <div class="form-group">
-                        <label>🏷️ Nom de l'article *</label>
+                        <label>🏷️ Nom</label>
                         <input type="text" id="name" required>
                     </div>
                     <div class="form-group">
-                        <label>💰 Prix * (ex: 15 000 FCFA)</label>
+                        <label>💰 Prix</label>
                         <input type="text" id="price" required>
                     </div>
                     <div class="form-group">
-                        <label>📂 Catégorie *</label>
+                        <label>📂 Catégorie</label>
                         <select id="category" required>
                             <option value="montre">⌚ Montre</option>
                             <option value="meuble">🪑 Meuble</option>
@@ -241,142 +110,82 @@
             </div>
             <div class="card">
                 <h2>📋 Tous les articles</h2>
-                <div id="articlesList"></div>
+                <div id="articlesList">Chargement...</div>
             </div>
         </div>
     </div>
 
     <div id="loginContainer" class="login-container">
         <h2>🔐 Accès administrateur</h2>
-        <input type="password" id="passwordInput" placeholder="Mot de passe" autofocus>
+        <input type="password" id="passwordInput" placeholder="Mot de passe">
         <button id="loginBtn">Se connecter</button>
         <div id="loginError" class="error"></div>
     </div>
 
-    <script>
-        const STORAGE_KEY = "boutiqueArticles";
-        const PASSWORD_KEY = "adminPassword";
+    <script type="module">
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const ADMIN_PASSWORD = "baba2025";
         let editingId = null;
         let currentImages = [];
 
-        function getStoredPassword() {
-            let pwd = localStorage.getItem(PASSWORD_KEY);
-            if (!pwd) { pwd = "baba2025"; localStorage.setItem(PASSWORD_KEY, pwd); }
-            return pwd;
-        }
-        function checkPassword(inputPwd) { return inputPwd === getStoredPassword(); }
-        function setNewPassword(newPwd) { localStorage.setItem(PASSWORD_KEY, newPwd); }
-
-        document.getElementById("loginBtn").addEventListener("click", () => {
-            const inputPwd = document.getElementById("passwordInput").value;
-            if (checkPassword(inputPwd)) {
-                sessionStorage.setItem("adminAuth", "true");
-                showAdminInterface();
-            } else {
-                document.getElementById("loginError").innerText = "Mot de passe incorrect.";
-            }
-        });
-        function showAdminInterface() {
-            document.getElementById("loginContainer").style.display = "none";
-            document.getElementById("adminContent").style.display = "block";
-            renderAdminList();
-        }
-        if (sessionStorage.getItem("adminAuth") === "true") showAdminInterface();
-
-        function getArticles() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) return JSON.parse(stored);
-            const defaultArticles = [
-                { id: Date.now()+1, name: "Montre connectée robuste", price: "10 000 FCFA", category: "montre", description: "Montre étanche, GPS intégré.", images: ["https://via.placeholder.com/300x200?text=Montre1"] },
-                { id: Date.now()+2, name: "Table centrale agente", price: "40 000 FCFA", category: "meuble", description: "Table design moderne.", images: ["https://via.placeholder.com/300x200?text=Table"] }
-            ];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultArticles));
-            return defaultArticles;
+        async function getArticles() {
+            const snapshot = await getDocs(window.articlesCollection);
+            const articles = [];
+            snapshot.forEach(doc => articles.push({ id: doc.id, ...doc.data() }));
+            return articles;
         }
 
-        function saveArticles(articles) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
-            renderAdminList();
-            window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
-        }
-
-        function handleImageUpload(files) {
-            const previewContainer = document.getElementById("imagePreviews");
-            previewContainer.innerHTML = "";
-            currentImages = [];
-            const maxFiles = Math.min(files.length, 3);
-            for (let i = 0; i < maxFiles; i++) {
-                const file = files[i];
-                if (file && file.type.startsWith("image/")) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        currentImages.push(e.target.result);
-                        const img = document.createElement("img");
-                        img.src = e.target.result;
-                        img.className = "image-preview";
-                        previewContainer.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-
-        function renderAdminList() {
-            const articles = getArticles();
+        async function renderAdminList() {
+            const articles = await getArticles();
             const container = document.getElementById("articlesList");
             if (!container) return;
             if (articles.length === 0) { container.innerHTML = "<p>Aucun article.</p>"; return; }
-            let html = `<div class="articles-table"><table><thead><tr><th>Image</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Description</th><th>Actions</th></tr></thead><tbody>`;
-            articles.forEach(art => {
-                const firstImg = art.images && art.images[0] ? art.images[0] : "https://via.placeholder.com/60";
+            let html = `<div class="articles-table">\n<table>\n<thead>\n<tr><th>Image</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Description</th><th>Actions</th></tr>\n</thead>\n<tbody>`;
+            for (const art of articles) {
+                const firstImg = (art.images && art.images[0]) || "https://via.placeholder.com/60";
                 const categoryLabel = art.category === "montre" ? "⌚ Montre" : "🪑 Meuble";
                 html += `<tr>
                     <td><img class="article-img" src="${escapeHtml(firstImg)}" onerror="this.src='https://via.placeholder.com/60'"></td>
                     <td><strong>${escapeHtml(art.name)}</strong></td>
                     <td>${categoryLabel}</td>
                     <td>${escapeHtml(art.price)}</td>
-                    <td>${escapeHtml(art.description.substring(0, 60))}${art.description.length > 60 ? '…' : ''}</td>
+                    <td>${escapeHtml(art.description?.substring(0,60))}${art.description?.length > 60 ? '…' : ''}</td>
                     <td class="action-buttons">
                         <button class="edit-btn" data-id="${art.id}">✏️ Modifier</button>
                         <button class="delete-btn" data-id="${art.id}">🗑️ Supprimer</button>
                     </td>
                 </tr>`;
-            });
-            html += `</tbody></table></div>`;
+            }
+            html += `</tbody>\n</table>\n</div>`;
             container.innerHTML = html;
-
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteArticle(parseInt(btn.dataset.id)));
-            });
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => startEdit(parseInt(btn.dataset.id)));
-            });
+            document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', () => deleteArticle(btn.dataset.id)));
+            document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => startEdit(btn.dataset.id)));
         }
 
-        function deleteArticle(id) {
-            if (confirm("Supprimer définitivement cet article ?")) {
-                let articles = getArticles();
-                articles = articles.filter(art => art.id !== id);
-                saveArticles(articles);
+        async function deleteArticle(id) {
+            if (confirm("Supprimer cet article ?")) {
+                await deleteDoc(doc(window.db, "articles", id));
                 if (editingId === id) resetForm();
+                await renderAdminList();
             }
         }
 
-        function startEdit(id) {
-            const articles = getArticles();
-            const article = articles.find(art => art.id === id);
+        async function startEdit(id) {
+            const articles = await getArticles();
+            const article = articles.find(a => a.id === id);
             if (!article) return;
             editingId = id;
             document.getElementById("name").value = article.name;
             document.getElementById("price").value = article.price;
             document.getElementById("category").value = article.category;
             document.getElementById("description").value = article.description;
-            currentImages = article.images ? [...article.images] : [];
+            currentImages = article.images || [];
             const previewContainer = document.getElementById("imagePreviews");
             previewContainer.innerHTML = "";
-            currentImages.forEach(imgSrc => {
+            currentImages.forEach(src => {
                 const img = document.createElement("img");
-                img.src = imgSrc;
+                img.src = src;
                 img.className = "image-preview";
                 previewContainer.appendChild(img);
             });
@@ -395,65 +204,67 @@
             document.getElementById("cancelEditBtn").style.display = "none";
         }
 
-        function saveProduct(event) {
+        function handleImageUpload(files) {
+            const previewContainer = document.getElementById("imagePreviews");
+            previewContainer.innerHTML = "";
+            currentImages = [];
+            const maxFiles = Math.min(files.length, 3);
+            for (let i = 0; i < maxFiles; i++) {
+                const file = files[i];
+                if (file && file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        currentImages.push(e.target.result);
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.className = "image-preview";
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        async function saveProduct(event) {
             event.preventDefault();
             const name = document.getElementById("name").value.trim();
             const price = document.getElementById("price").value.trim();
             const category = document.getElementById("category").value;
             const description = document.getElementById("description").value.trim();
-            if (!name || !price) {
-                alert("Nom et prix obligatoires.");
-                return;
-            }
-            let articles = getArticles();
-            if (editingId !== null) {
-                const index = articles.findIndex(art => art.id === editingId);
-                if (index !== -1) {
-                    articles[index] = {
-                        ...articles[index],
-                        name, price, category, description,
-                        images: currentImages.length ? currentImages : articles[index].images
-                    };
-                }
-                saveArticles(articles);
+            if (!name || !price) { alert("Nom et prix obligatoires."); return; }
+            const data = { name, price, category, description, images: currentImages.length ? currentImages : ["https://via.placeholder.com/300x200"] };
+            if (editingId) {
+                await updateDoc(doc(window.db, "articles", editingId), data);
                 resetForm();
             } else {
-                const newId = Date.now();
-                const newArticle = {
-                    id: newId,
-                    name, price, category, description,
-                    images: currentImages.length ? currentImages : ["https://via.placeholder.com/300x200?text=Image+non+disponible"]
-                };
-                articles.push(newArticle);
-                saveArticles(articles);
+                await addDoc(window.articlesCollection, data);
                 resetForm();
             }
+            await renderAdminList();
         }
 
-        function escapeHtml(str) {
-            if (!str) return "";
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
+        function escapeHtml(str) { return str?.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])) || ""; }
 
-        function changePassword() {
-            const newPwd = prompt("Entrez le nouveau mot de passe :");
-            if (newPwd && newPwd.trim() !== "") {
-                setNewPassword(newPwd);
-                alert("Mot de passe modifié avec succès !");
+        document.getElementById("loginBtn").addEventListener("click", () => {
+            const pwd = document.getElementById("passwordInput").value;
+            if (pwd === ADMIN_PASSWORD) {
+                sessionStorage.setItem("adminAuth", "true");
+                document.getElementById("loginContainer").style.display = "none";
+                document.getElementById("adminContent").style.display = "block";
+                renderAdminList();
             } else {
-                alert("Mot de passe invalide.");
+                document.getElementById("loginError").innerText = "Mot de passe incorrect.";
             }
+        });
+        if (sessionStorage.getItem("adminAuth") === "true") {
+            document.getElementById("loginContainer").style.display = "none";
+            document.getElementById("adminContent").style.display = "block";
+            renderAdminList();
         }
 
-        document.getElementById("changePasswordBtn")?.addEventListener("click", changePassword);
-        document.getElementById("productForm")?.addEventListener("submit", saveProduct);
-        document.getElementById("cancelEditBtn")?.addEventListener("click", resetForm);
-        document.getElementById("imagesInput")?.addEventListener("change", (e) => handleImageUpload(e.target.files));
+        document.getElementById("productForm").addEventListener("submit", saveProduct);
+        document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+        document.getElementById("imagesInput").addEventListener("change", (e) => handleImageUpload(e.target.files));
     </script>
 </body>
-                    </html>
+</html>
