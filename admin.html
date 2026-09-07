@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - La Boutique de Baba</title>
+    <title>Admin - Babaci</title>
 
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc, query, orderBy, where, documentId } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         // Votre configuration Firebase
         const firebaseConfig = {
@@ -23,116 +24,416 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
         const articlesCollection = collection(db, "articles");
 
         window.db = db;
+        window.auth = auth;
         window.articlesCollection = articlesCollection;
+        window.collection = collection;
         window.addDoc = addDoc;
         window.getDocs = getDocs;
         window.updateDoc = updateDoc;
         window.deleteDoc = deleteDoc;
         window.doc = doc;
+        window.getDoc = getDoc;
+        window.query = query;
+        window.orderBy = orderBy;
+        window.where = where;
+        window.documentId = documentId;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut = signOut;
+        window.sendPasswordResetEmail = sendPasswordResetEmail;
+        window.updatePassword = updatePassword;
+        window.reauthenticateWithCredential = reauthenticateWithCredential;
+        window.EmailAuthProvider = EmailAuthProvider;
     </script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', system-ui; }
-        body { background: #f0f2f5; padding: 2rem; }
-        .login-container { max-width: 400px; margin: 5rem auto; background: white; padding: 2rem; border-radius: 28px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .login-container input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 40px; }
-        .login-container button { background: #2c7a4b; color: white; border: none; padding: 0.7rem; border-radius: 40px; font-weight: bold; cursor: pointer; width: 100%; }
-        .error { color: red; margin-top: 0.5rem; }
-        .admin-header { background: #1e3a2f; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border-radius: 28px 28px 0 0; }
-        .admin-header a { color: #f3c26b; text-decoration: none; margin-left: 1.5rem; }
-        .container { max-width: 1300px; margin: 0 auto; padding: 0 1.5rem; }
-        .card { background: white; border-radius: 28px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
-        h2 { font-size: 1.6rem; margin-bottom: 1.5rem; border-left: 5px solid #b68b40; padding-left: 1rem; }
-        .form-group { margin-bottom: 1.2rem; }
-        label { font-weight: 600; display: block; margin-bottom: 0.4rem; }
-        input, textarea, select { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 20px; }
-        .image-preview-area { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
-        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 16px; border: 2px solid #ddd; }
-        button { background: #2c7a4b; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 40px; font-weight: bold; cursor: pointer; }
-        button:hover { background: #1e5a38; }
-        .btn-danger { background: #b91c1c; }
-        .btn-secondary { background: #4b5563; }
-        .change-pwd-btn { background: #b68b40; margin-left: 1rem; }
+        :root {
+            --paper: #F6F1E7;
+            --paper-raised: #FBF8F2;
+            --ink: #211D16;
+            --ink-soft: #6B6255;
+            --forest: #1F3A2E;
+            --forest-deep: #16281F;
+            --gold: #B68B40;
+            --gold-light: #D9B876;
+            --line: #DFD3BC;
+            --danger: #A63A2E;
+            --danger-deep: #822C22;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+        h1, h2, .brand { font-family: 'Fraunces', Georgia, serif; }
+
+        /* --- En-tête --- */
+        .admin-header {
+            background: var(--forest);
+            color: var(--paper);
+            padding: 1.4rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 3px solid var(--gold);
+        }
+        .admin-header .brand { font-size: 1.4rem; font-weight: 500; letter-spacing: 0.01em; display: flex; align-items: center; gap: 0.9rem; }
+        .admin-header .brand-text span { color: var(--gold-light); font-family: 'Inter', sans-serif; font-size: 0.75rem; display: block; font-weight: 500; margin-top: 0.15rem; }
+        .admin-header .brand-img { height: 42px; width: auto; border-radius: 4px; }
+        .admin-header .actions { display: flex; align-items: center; gap: 1.6rem; }
+        .admin-header a, .admin-header button.link-btn {
+            color: var(--gold-light); text-decoration: none; background: none; border: none;
+            cursor: pointer; font-weight: 500; font-size: 0.9rem; padding: 0;
+            border-bottom: 1px solid transparent;
+        }
+        .admin-header a:hover, .admin-header button.link-btn:hover { border-bottom-color: var(--gold-light); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.75rem 4rem; }
+
+        /* --- Sections (registre, pas de cartes flottantes) --- */
+        .card {
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1.75rem;
+            padding-bottom: 0.9rem;
+            border-bottom: 1px solid var(--line);
+            color: var(--forest-deep);
+        }
+        .form-group { margin-bottom: 1.4rem; }
+        label {
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 0.01em;
+            display: block; margin-bottom: 0.5rem; color: var(--ink-soft);
+        }
+        input, textarea, select {
+            width: 100%; padding: 0.7rem 0.9rem;
+            border: 1px solid var(--line); border-radius: 4px;
+            background: var(--paper); font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--ink);
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(182,139,64,0.15);
+        }
+        .image-preview-area { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+        .image-preview { width: 90px; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); }
+
+        button {
+            background: var(--forest); color: var(--paper);
+            border: none; padding: 0.75rem 1.6rem; border-radius: 4px;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        button:hover { background: var(--forest-deep); }
+        .btn-secondary { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
+        .btn-secondary:hover { background: var(--paper); color: var(--ink); }
+
+        /* --- Tableau façon registre --- */
         .articles-table { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; }
-        th { background: #f8fafc; }
-        .article-img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; }
-        .action-buttons { display: flex; gap: 8px; }
-        .edit-btn, .delete-btn { padding: 4px 12px; font-size: 0.8rem; }
-        .edit-btn { background: #2563eb; }
-        .delete-btn { background: #dc2626; }
-        @media (max-width:700px) { .admin-header { flex-direction: column; gap:0.8rem; } }
+        th, td { text-align: left; padding: 0.9rem 0.6rem; border-bottom: 1px solid var(--line); }
+        th {
+            font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em;
+            color: var(--ink-soft); text-transform: uppercase;
+        }
+        tbody tr:hover { background: rgba(182,139,64,0.06); }
+        .article-img { width: 52px; height: 52px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); }
+        .action-buttons { display: flex; gap: 0.5rem; }
+        .edit-btn, .delete-btn { padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 600; }
+        .edit-btn { background: transparent; color: var(--forest); border: 1px solid var(--forest); }
+        .edit-btn:hover { background: var(--forest); color: var(--paper); }
+        .delete-btn { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+        .delete-btn:hover { background: var(--danger); color: var(--paper); }
+
+        /* --- Connexion --- */
+        .login-container {
+            max-width: 380px; margin: 6rem auto; background: var(--paper-raised);
+            border: 1px solid var(--line); padding: 2.5rem; text-align: center; border-radius: 6px;
+        }
+        .login-container h2 { border: none; margin-bottom: 0.4rem; padding: 0; }
+        .login-subtitle { color: var(--ink-soft); font-size: 0.88rem; margin-bottom: 1.75rem; }
+        .login-container input { margin-bottom: 1rem; }
+        .login-container button { width: 100%; margin-top: 0.4rem; background: var(--gold); color: var(--forest-deep); }
+        .login-container button:hover { background: var(--gold-light); }
+        .error { color: var(--danger); font-size: 0.85rem; margin-top: 0.75rem; min-height: 1.2em; }
+        .login-info { color: var(--forest); font-size: 0.85rem; margin-top: 0.5rem; }
+        .forgot-link { display: inline-block; margin-top: 1.1rem; font-size: 0.85rem; color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid transparent; }
+        .forgot-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+        @media (max-width:700px) {
+            .admin-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .container { padding: 1.75rem 1.25rem 3rem; }
+            .card { padding: 1.5rem; }
+        }
+
+        /* --- Onglets --- */
+        .admin-tabs { display: flex; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--line); }
+        .admin-tab {
+            background: none; border: none; padding: 0 0 0.9rem; font-family: 'Inter', sans-serif;
+            font-weight: 600; font-size: 0.95rem; color: var(--ink-soft); cursor: pointer;
+            border-bottom: 2px solid transparent; margin-bottom: -1px;
+        }
+        .admin-tab.active, .admin-tab:hover { color: var(--forest); border-bottom-color: var(--gold); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* --- Statistiques --- */
+        .stats-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 1.25rem; margin-bottom: 2.25rem; }
+        .stat-box { border: 1px solid var(--line); border-radius: 6px; padding: 1.4rem; background: var(--paper); }
+        .stat-box .stat-value { font-family: 'Fraunces', serif; font-size: 2rem; color: var(--forest-deep); font-weight: 500; }
+        .stat-box .stat-label { font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.3rem; }
+        .chart-wrap { border: 1px solid var(--line); border-radius: 6px; padding: 1.6rem 1.4rem 1rem; background: var(--paper); }
+        .chart-title { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 1.2rem; }
+        .bar-chart { display: flex; align-items: flex-end; gap: 0.9rem; height: 160px; }
+        .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+        .bar-value { font-size: 0.72rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
+        .bar { width: 100%; max-width: 34px; background: var(--gold); border-radius: 3px 3px 0 0; min-height: 3px; }
+        .bar-day { font-size: 0.72rem; color: var(--ink-soft); margin-top: 0.5rem; }
+        .stats-note { font-size: 0.8rem; color: var(--ink-soft); margin-top: 1.4rem; line-height: 1.5; }
+
+        /* --- Tableau de bord --- */
+        .dash-actions { display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap; }
+        .dash-recent-item {
+            display: flex; align-items: center; gap: 0.9rem;
+            padding: 0.75rem 0; border-bottom: 1px solid var(--line);
+        }
+        .dash-recent-item:last-child { border-bottom: none; }
+        .dash-recent-item img { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); }
+        .dash-recent-info { display: flex; flex-direction: column; }
+        .dash-recent-info strong { font-size: 0.92rem; color: var(--ink); }
+        .dash-recent-info span { font-size: 0.82rem; color: var(--gold); font-weight: 600; margin-top: 0.15rem; }
     </style>
 </head>
 <body>
     <div id="adminContent" style="display: none;">
         <div class="admin-header">
-            <div><strong>🔧 Administration - La Boutique de Baba</strong></div>
-            <div><a href="index.html">← Voir la boutique</a></div>
+            <div class="brand">
+                <img src="ba.jpg" alt="Babaci" class="brand-img" onerror="this.style.display='none';">
+                <div class="brand-text">Babaci<span>Espace administrateur</span></div>
+            </div>
+            <div class="actions">
+                <a href="index.html">Voir la boutique</a>
+                <button id="logoutBtn" class="link-btn">Déconnexion</button>
+            </div>
         </div>
         <div class="container">
-            <div class="card">
-                <h2 id="formTitle">➕ Ajouter un article</h2>
-                <form id="productForm">
-                    <div class="form-group">
-                        <label>📸 Photos (max 3)</label>
-                        <input type="file" id="imagesInput" accept="image/*" multiple>
-                        <div id="imagePreviews" class="image-preview-area"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>🏷️ Nom</label>
-                        <input type="text" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>💰 Prix</label>
-                        <input type="text" id="price" required>
-                    </div>
-                    <div class="form-group">
-                        <label>📂 Catégorie</label>
-                        <select id="category" required>
-                            <option value="montre">⌚ Montre</option>
-                            <option value="meuble">🪑 Meuble</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>📝 Description</label>
-                        <textarea id="description" rows="3"></textarea>
-                    </div>
-                    <div>
-                        <button type="submit" id="saveBtn">💾 Enregistrer</button>
-                        <button type="button" id="cancelEditBtn" class="btn-secondary" style="display:none;">Annuler</button>
-                    </div>
-                </form>
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="dashboard">Tableau de bord</button>
+                <button class="admin-tab" data-tab="articles">Articles</button>
+                <button class="admin-tab" data-tab="stats">Statistiques</button>
             </div>
-            <div class="card">
-                <h2>📋 Tous les articles</h2>
-                <div id="articlesList">Chargement...</div>
+
+            <div id="tab-dashboard" class="tab-panel active">
+                <div class="card">
+                    <h2>Aperçu</h2>
+                    <div class="stats-summary">
+                        <div class="stat-box">
+                            <div class="stat-value" id="dashTotalArticles">—</div>
+                            <div class="stat-label">Articles au catalogue</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="dashMontres">—</div>
+                            <div class="stat-label">Montres</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="dashMeubles">—</div>
+                            <div class="stat-label">Meubles</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="dashTotalVisits">—</div>
+                            <div class="stat-label">Visites totales</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="dashTodayVisits">—</div>
+                            <div class="stat-label">Visites aujourd'hui</div>
+                        </div>
+                    </div>
+                    <div class="dash-actions">
+                        <button id="dashAddArticleBtn" type="button">Ajouter un article</button>
+                        <button id="dashViewStatsBtn" type="button" class="btn-secondary">Voir les statistiques</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Derniers articles ajoutés</h2>
+                    <div id="dashboardRecent">Chargement…</div>
+                </div>
+                <div class="card">
+                    <h2>Sécurité du compte</h2>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label>Mot de passe actuel</label>
+                            <input type="password" id="currentPasswordInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nouveau mot de passe</label>
+                            <input type="password" id="newPasswordInput" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmer le nouveau mot de passe</label>
+                            <input type="password" id="confirmPasswordInput" required minlength="6">
+                        </div>
+                        <button type="submit">Mettre à jour le mot de passe</button>
+                        <div id="passwordFormError" class="error"></div>
+                        <div id="passwordFormSuccess" class="login-info"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="tab-articles" class="tab-panel">
+                <div class="card">
+                    <h2 id="formTitle">Ajouter un article</h2>
+                    <form id="productForm">
+                        <div class="form-group">
+                            <label>Photos (3 maximum)</label>
+                            <input type="file" id="imagesInput" accept="image/*" multiple>
+                            <div id="imagePreviews" class="image-preview-area"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Prix</label>
+                            <input type="text" id="price" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Catégorie</label>
+                            <select id="category" required>
+                                <option value="montre">Montre</option>
+                                <option value="meuble">Meuble</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="description" rows="3"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" id="saveBtn">Enregistrer</button>
+                            <button type="button" id="cancelEditBtn" class="btn-secondary" style="display:none;">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h2>Tous les articles</h2>
+                    <div id="articlesList">Chargement…</div>
+                </div>
+            </div>
+
+            <div id="tab-stats" class="tab-panel">
+                <div class="card">
+                    <h2>Fréquentation du site</h2>
+                    <div class="stats-summary">
+                        <div class="stat-box">
+                            <div class="stat-value" id="statTotalVisits">—</div>
+                            <div class="stat-label">Visites totales</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="statTodayVisits">—</div>
+                            <div class="stat-label">Visites aujourd'hui</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="statAvgVisits">—</div>
+                            <div class="stat-label">Moyenne / jour (7 jours)</div>
+                        </div>
+                    </div>
+                    <div class="chart-wrap">
+                        <div class="chart-title">Visites des 7 derniers jours</div>
+                        <div id="visitsChart" class="bar-chart">Chargement…</div>
+                    </div>
+                    <p class="stats-note">Une visite est comptée une fois par session de navigateur (un même visiteur qui revient plus tard dans la journée, ou depuis un autre appareil, compte comme une nouvelle visite). Il ne s'agit donc pas d'un nombre exact de personnes uniques, mais d'un bon indicateur de fréquentation.</p>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="loginContainer" class="login-container">
-        <h2>🔐 Accès administrateur</h2>
+        <h2>Accès administrateur</h2>
+        <p class="login-subtitle">Babaci</p>
+        <input type="email" id="emailInput" placeholder="Email">
         <input type="password" id="passwordInput" placeholder="Mot de passe">
         <button id="loginBtn">Se connecter</button>
         <div id="loginError" class="error"></div>
+        <div id="loginInfo" class="login-info"></div>
+        <a href="#" id="forgotPasswordLink" class="forgot-link">Mot de passe oublié ?</a>
     </div>
 
-    <script type="module">
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const ADMIN_PASSWORD = "baba2025";
+    <script type="module">
+        import { doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         let editingId = null;
         let currentImages = [];
 
+        // --- Authentification ---
+        window.onAuthStateChanged(window.auth, (user) => {
+            if (user) {
+                document.getElementById("loginContainer").style.display = "none";
+                document.getElementById("adminContent").style.display = "block";
+                renderDashboard();
+            } else {
+                document.getElementById("loginContainer").style.display = "block";
+                document.getElementById("adminContent").style.display = "none";
+            }
+        });
+
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+            const email = document.getElementById("emailInput").value.trim();
+            const pwd = document.getElementById("passwordInput").value;
+            const errorEl = document.getElementById("loginError");
+            const infoEl = document.getElementById("loginInfo");
+            errorEl.innerText = "";
+            infoEl.innerText = "";
+            try {
+                await window.signInWithEmailAndPassword(window.auth, email, pwd);
+            } catch (err) {
+                errorEl.innerText = "Email ou mot de passe incorrect.";
+            }
+        });
+
+        document.getElementById("forgotPasswordLink").addEventListener("click", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("emailInput").value.trim();
+            const errorEl = document.getElementById("loginError");
+            const infoEl = document.getElementById("loginInfo");
+            errorEl.innerText = "";
+            infoEl.innerText = "";
+            if (!email) {
+                errorEl.innerText = "Renseigne d'abord ton email ci-dessus, puis clique sur ce lien.";
+                return;
+            }
+            try {
+                await window.sendPasswordResetEmail(window.auth, email);
+                infoEl.innerText = "Email envoyé ! Vérifie ta boîte de réception (et les spams) pour réinitialiser ton mot de passe.";
+            } catch (err) {
+                errorEl.innerText = "Impossible d'envoyer l'email : " + err.message;
+            }
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+            await window.signOut(window.auth);
+        });
+
+        // --- Articles ---
         async function getArticles() {
-            const snapshot = await getDocs(window.articlesCollection);
+            const snapshot = await window.getDocs(window.articlesCollection);
             const articles = [];
-            snapshot.forEach(doc => articles.push({ id: doc.id, ...doc.data() }));
+            snapshot.forEach(d => articles.push({ id: d.id, ...d.data() }));
             return articles;
         }
 
@@ -144,7 +445,7 @@
             let html = `<div class="articles-table">\n<table>\n<thead>\n<tr><th>Image</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Description</th><th>Actions</th></tr>\n</thead>\n<tbody>`;
             for (const art of articles) {
                 const firstImg = (art.images && art.images[0]) || "https://via.placeholder.com/60";
-                const categoryLabel = art.category === "montre" ? "⌚ Montre" : "🪑 Meuble";
+                const categoryLabel = art.category === "montre" ? "Montre" : "Meuble";
                 html += `<tr>
                     <td><img class="article-img" src="${escapeHtml(firstImg)}" onerror="this.src='https://via.placeholder.com/60'"></td>
                     <td><strong>${escapeHtml(art.name)}</strong></td>
@@ -152,8 +453,8 @@
                     <td>${escapeHtml(art.price)}</td>
                     <td>${escapeHtml(art.description?.substring(0,60))}${art.description?.length > 60 ? '…' : ''}</td>
                     <td class="action-buttons">
-                        <button class="edit-btn" data-id="${art.id}">✏️ Modifier</button>
-                        <button class="delete-btn" data-id="${art.id}">🗑️ Supprimer</button>
+                        <button class="edit-btn" data-id="${art.id}">Modifier</button>
+                        <button class="delete-btn" data-id="${art.id}">Supprimer</button>
                     </td>
                 </tr>`;
             }
@@ -165,9 +466,13 @@
 
         async function deleteArticle(id) {
             if (confirm("Supprimer cet article ?")) {
-                await deleteDoc(doc(window.db, "articles", id));
-                if (editingId === id) resetForm();
-                await renderAdminList();
+                try {
+                    await window.deleteDoc(doc(window.db, "articles", id));
+                    if (editingId === id) resetForm();
+                    await renderAdminList();
+                } catch (err) {
+                    alert("Erreur lors de la suppression : " + err.message);
+                }
             }
         }
 
@@ -189,8 +494,8 @@
                 img.className = "image-preview";
                 previewContainer.appendChild(img);
             });
-            document.getElementById("formTitle").innerText = "✏️ Modifier l'article";
-            document.getElementById("saveBtn").innerText = "🔄 Mettre à jour";
+            document.getElementById("formTitle").innerText = "Modifier l'article";
+            document.getElementById("saveBtn").innerText = "Mettre à jour";
             document.getElementById("cancelEditBtn").style.display = "inline-block";
         }
 
@@ -199,8 +504,8 @@
             document.getElementById("productForm").reset();
             document.getElementById("imagePreviews").innerHTML = "";
             currentImages = [];
-            document.getElementById("formTitle").innerText = "➕ Ajouter un article";
-            document.getElementById("saveBtn").innerText = "💾 Enregistrer";
+            document.getElementById("formTitle").innerText = "Ajouter un article";
+            document.getElementById("saveBtn").innerText = "Enregistrer";
             document.getElementById("cancelEditBtn").style.display = "none";
         }
 
@@ -233,38 +538,193 @@
             const description = document.getElementById("description").value.trim();
             if (!name || !price) { alert("Nom et prix obligatoires."); return; }
             const data = { name, price, category, description, images: currentImages.length ? currentImages : ["https://via.placeholder.com/300x200"] };
-            if (editingId) {
-                await updateDoc(doc(window.db, "articles", editingId), data);
+            try {
+                if (editingId) {
+                    await window.updateDoc(doc(window.db, "articles", editingId), data);
+                } else {
+                    await window.addDoc(window.articlesCollection, data);
+                }
                 resetForm();
-            } else {
-                await addDoc(window.articlesCollection, data);
-                resetForm();
+                await renderAdminList();
+            } catch (err) {
+                alert("Erreur lors de l'enregistrement : " + err.message);
             }
-            await renderAdminList();
         }
 
         function escapeHtml(str) { return str?.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])) || ""; }
 
-        document.getElementById("loginBtn").addEventListener("click", () => {
-            const pwd = document.getElementById("passwordInput").value;
-            if (pwd === ADMIN_PASSWORD) {
-                sessionStorage.setItem("adminAuth", "true");
-                document.getElementById("loginContainer").style.display = "none";
-                document.getElementById("adminContent").style.display = "block";
-                renderAdminList();
-            } else {
-                document.getElementById("loginError").innerText = "Mot de passe incorrect.";
-            }
-        });
-        if (sessionStorage.getItem("adminAuth") === "true") {
-            document.getElementById("loginContainer").style.display = "none";
-            document.getElementById("adminContent").style.display = "block";
-            renderAdminList();
-        }
-
         document.getElementById("productForm").addEventListener("submit", saveProduct);
         document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
         document.getElementById("imagesInput").addEventListener("change", (e) => handleImageUpload(e.target.files));
+
+        // --- Changer le mot de passe ---
+        document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const currentPwd = document.getElementById("currentPasswordInput").value;
+            const newPwd = document.getElementById("newPasswordInput").value;
+            const confirmPwd = document.getElementById("confirmPasswordInput").value;
+            const errorEl = document.getElementById("passwordFormError");
+            const successEl = document.getElementById("passwordFormSuccess");
+            errorEl.innerText = "";
+            successEl.innerText = "";
+
+            if (newPwd !== confirmPwd) {
+                errorEl.innerText = "Les deux nouveaux mots de passe ne correspondent pas.";
+                return;
+            }
+            if (newPwd.length < 6) {
+                errorEl.innerText = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
+                return;
+            }
+
+            try {
+                const user = window.auth.currentUser;
+                const credential = window.EmailAuthProvider.credential(user.email, currentPwd);
+                await window.reauthenticateWithCredential(user, credential);
+                await window.updatePassword(user, newPwd);
+                successEl.innerText = "Mot de passe mis à jour avec succès.";
+                document.getElementById("passwordForm").reset();
+            } catch (err) {
+                if (err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+                    errorEl.innerText = "Le mot de passe actuel est incorrect.";
+                } else {
+                    errorEl.innerText = "Erreur : " + err.message;
+                }
+            }
+        });
+
+        // --- Onglets ---
+        let statsLoaded = false;
+        let articlesLoaded = false;
+        document.querySelectorAll(".admin-tab").forEach(tab => {
+            tab.addEventListener("click", () => {
+                document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
+                document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+                tab.classList.add("active");
+                document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
+                if (tab.dataset.tab === "articles" && !articlesLoaded) {
+                    articlesLoaded = true;
+                    renderAdminList();
+                } else if (tab.dataset.tab === "stats" && !statsLoaded) {
+                    statsLoaded = true;
+                    loadStats();
+                } else if (tab.dataset.tab === "dashboard") {
+                    renderDashboard();
+                }
+            });
+        });
+
+        document.getElementById("dashAddArticleBtn").addEventListener("click", () => {
+            document.querySelector('.admin-tab[data-tab="articles"]').click();
+        });
+        document.getElementById("dashViewStatsBtn").addEventListener("click", () => {
+            document.querySelector('.admin-tab[data-tab="stats"]').click();
+        });
+
+        // --- Tableau de bord ---
+        async function getTotalsAndToday() {
+            const totalsSnap = await window.getDoc(doc(window.db, "stats", "totals"));
+            const totalVisits = totalsSnap.exists() ? (totalsSnap.data().pageViews || 0) : 0;
+            const todaySnap = await window.getDoc(doc(window.db, "dailyVisits", dateStr(0)));
+            const todayVisits = todaySnap.exists() ? (todaySnap.data().count || 0) : 0;
+            return { totalVisits, todayVisits };
+        }
+
+        async function renderDashboard() {
+            const recentEl = document.getElementById("dashboardRecent");
+            try {
+                const articles = await getArticles();
+                document.getElementById("dashTotalArticles").innerText = articles.length;
+                document.getElementById("dashMontres").innerText = articles.filter(a => a.category === "montre").length;
+                document.getElementById("dashMeubles").innerText = articles.filter(a => a.category === "meuble").length;
+
+                const recent = articles.slice(0, 5);
+                if (recent.length === 0) {
+                    recentEl.innerHTML = `<p style="color:var(--ink-soft);font-size:0.9rem;">Aucun article pour le moment.</p>`;
+                } else {
+                    recentEl.innerHTML = recent.map(a => {
+                        const img = (a.images && a.images[0]) || "https://via.placeholder.com/60";
+                        return `<div class="dash-recent-item">
+                            <img src="${escapeHtml(img)}" onerror="this.src='https://via.placeholder.com/60'">
+                            <div class="dash-recent-info"><strong>${escapeHtml(a.name)}</strong><span>${escapeHtml(a.price)}</span></div>
+                        </div>`;
+                    }).join("");
+                }
+            } catch (err) {
+                console.error("Erreur chargement des articles pour le tableau de bord :", err);
+                recentEl.innerHTML = `<p style="color:var(--danger);">Impossible de charger les articles.</p>`;
+            }
+
+            try {
+                const { totalVisits, todayVisits } = await getTotalsAndToday();
+                document.getElementById("dashTotalVisits").innerText = totalVisits.toLocaleString("fr-FR");
+                document.getElementById("dashTodayVisits").innerText = todayVisits.toLocaleString("fr-FR");
+            } catch (err) {
+                console.error("Erreur chargement des visites pour le tableau de bord :", err);
+                document.getElementById("dashTotalVisits").innerText = "—";
+                document.getElementById("dashTodayVisits").innerText = "—";
+            }
+        }
+
+        // --- Statistiques ---
+        function dateStr(offsetDays) {
+            const d = new Date();
+            d.setDate(d.getDate() - offsetDays);
+            return d.toISOString().slice(0, 10);
+        }
+
+        function dayLabel(offsetDays) {
+            const d = new Date();
+            d.setDate(d.getDate() - offsetDays);
+            return d.toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", "");
+        }
+
+        async function loadStats() {
+            const chartEl = document.getElementById("visitsChart");
+            try {
+                // Total des visites
+                const totalsSnap = await window.getDoc(doc(window.db, "stats", "totals"));
+                const totalVisits = totalsSnap.exists() ? (totalsSnap.data().pageViews || 0) : 0;
+                document.getElementById("statTotalVisits").innerText = totalVisits.toLocaleString("fr-FR");
+
+                // 7 derniers jours (id de document = date, ordre chronologique)
+                const startDate = dateStr(6);
+                const endDate = dateStr(0);
+                const q = window.query(
+                    window.collection(window.db, "dailyVisits"),
+                    window.orderBy(window.documentId()),
+                    window.where(window.documentId(), ">=", startDate),
+                    window.where(window.documentId(), "<=", endDate)
+                );
+                const snap = await window.getDocs(q);
+                const counts = {};
+                snap.forEach(d => { counts[d.id] = d.data().count || 0; });
+
+                const days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const key = dateStr(i);
+                    days.push({ key, label: dayLabel(i), count: counts[key] || 0 });
+                }
+
+                const todayCount = counts[dateStr(0)] || 0;
+                document.getElementById("statTodayVisits").innerText = todayCount.toLocaleString("fr-FR");
+
+                const total7 = days.reduce((sum, d) => sum + d.count, 0);
+                document.getElementById("statAvgVisits").innerText = (total7 / 7).toFixed(1);
+
+                const maxCount = Math.max(1, ...days.map(d => d.count));
+                chartEl.innerHTML = days.map(d => `
+                    <div class="bar-col">
+                        <div class="bar-value">${d.count}</div>
+                        <div class="bar" style="height:${Math.max(4, (d.count / maxCount) * 130)}px"></div>
+                        <div class="bar-day">${escapeHtml(d.label)}</div>
+                    </div>
+                `).join("");
+            } catch (err) {
+                console.error("Erreur chargement statistiques :", err);
+                chartEl.innerHTML = `<p style="color:var(--danger);">Impossible de charger les statistiques : ${escapeHtml(err.message)}</p>`;
+            }
+        }
     </script>
 </body>
 </html>
